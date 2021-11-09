@@ -16,11 +16,29 @@ async function run() {
         await client.connect();
         const database = client.db("baby_collection");
         const productCollection = database.collection("babyProducts");
+        const usersCollection = database.collection("users");
 
         app.get('/products',async (req,res)=>{
             const query = {};
             const result = await  productCollection.find(query).toArray();
             res.json(result);
+        })
+
+        app.post('/users', async (req,res)=>{
+            const user = req.body;
+            const result = await usersCollection.insertOne(user);
+            res.send(result)
+        })
+
+        app.put('/users', async (req,res)=>{
+            const user = req.body;
+            const upsert= {upsert: true};
+            const filter = {email: user.email};
+            const updateDocs = {
+                $set:{email: user.email},
+            };
+            const result = await usersCollection.updateOne(filter)
+            res.send(result)
         })
        
     } finally {
