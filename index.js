@@ -20,7 +20,7 @@ async function run() {
 
         app.get('/products',async (req,res)=>{
             const query = {};
-            const result = await  productCollection.find(query).toArray();
+            const result = await  productCollection.find(query).limit(5).toArray();
             res.json(result);
         })
 
@@ -35,12 +35,38 @@ async function run() {
             const upsert= {upsert: true};
             const filter = {email: user.email};
             const updateDocs = {
-                $set:{email: user.email},
+                $set:{email: user.email,name:user.name},
             };
-            const result = await usersCollection.updateOne(filter)
+            const result = await usersCollection.updateOne(filter,updateDocs,upsert);
             res.send(result)
         })
+
+        app.get('/checkAdmin/:email', async (req,res)=>{
+            const email = req.params.email;
+           const query = {email: email};
+           const result = await usersCollection.findOne(query);
+           if(result?.role === 'admin'){
+               res.json({admin:true})
+           }else{
+               res.json({admin: false})
+           }
+        })
        
+
+        app.put('/makeAdmin/:email', async (req,res)=>{
+            const email = req.params.email;
+            const query = {email: email};
+            const updateDocs = {$set:{role: 'admin'}};
+            const result = await usersCollection.updateOne(query,updateDocs);
+            res.send(result)
+        })
+
+        app.get('/singleProduct/:id', async (req,res)=>{
+            const id = req.params.id
+            const query = {_id: ObjectID(id)};
+            const result = await productCollection.findOne(query);
+            res.json(result);
+        })
     } finally {
         // await client.close();
     }
