@@ -17,10 +17,11 @@ async function run() {
         const database = client.db("baby_collection");
         const productCollection = database.collection("babyProducts");
         const usersCollection = database.collection("users");
+        const orderCollection = database.collection("ordered");
 
         app.get('/products',async (req,res)=>{
             const query = {};
-            const result = await  productCollection.find(query).limit(5).toArray();
+            const result = await  productCollection.find(query).limit(6).toArray();
             res.json(result);
         })
 
@@ -67,6 +68,64 @@ async function run() {
             const result = await productCollection.findOne(query);
             res.json(result);
         })
+
+        app.post('/saveOrder', async (req,res)=>{
+            const product = req.body;
+            const result = await orderCollection.insertOne(product);
+            res.json(result)
+        })
+
+        app.get('/userOrders/:email', async (req,res)=>{
+            const email = req.params.email;
+            const query = {email: email};
+            const result = await orderCollection.find(query).toArray();
+            res.json(result)
+        })
+
+        app.delete('/deleteOrder/:id', async (req,res)=>{
+            const id = req.params.id;
+            const query = {_id: ObjectID(id)};
+            const result = await orderCollection.deleteOne(query);
+            res.json(result);
+        })
+
+        app.get('/getAllOrders', async (req,res)=>{
+            const query = {};
+            const result = await orderCollection.find(query).toArray();
+            res.json(result);
+        })
+
+        app.get('/getAllProducts', async (req,res)=>{
+            const query = {};
+            const result = await productCollection.find(query).toArray();
+            res.json(result);
+        })
+
+
+        app.put('/setStatus/:id', async (req,res)=>{
+            const id = req.params.id;
+            const query = {_id: ObjectID(id)};
+            const updateDocs ={$set:{status: 'shipped'}};
+            const result = await orderCollection.updateOne(query,updateDocs);
+            res.json(result); 
+        })
+
+
+        app.delete('/deleteProduct/:id', async (req,res)=>{
+            const id = req.params.id;
+            console.log(id)
+            const query = {_id: ObjectID(id)};
+            const result = await productCollection.deleteOne(query);
+            res.json(result);
+        })
+
+
+        app.post('/addProduct', async (req,res)=>{
+            const product = req.body;
+            const result = await productCollection.insertOne(product);
+            res.json(result);
+        })
+
     } finally {
         // await client.close();
     }
