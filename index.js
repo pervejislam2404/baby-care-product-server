@@ -18,6 +18,7 @@ async function run() {
         const productCollection = database.collection("babyProducts");
         const usersCollection = database.collection("users");
         const orderCollection = database.collection("ordered");
+        const reviewCollection = database.collection("review");
 
         app.get('/products',async (req,res)=>{
             const query = {};
@@ -123,6 +124,18 @@ async function run() {
         app.post('/addProduct', async (req,res)=>{
             const product = req.body;
             const result = await productCollection.insertOne(product);
+            res.json(result);
+        })
+
+        app.post('/saveReview', async (req,res)=>{
+            const review = req.body;
+           const result = await reviewCollection.insertOne(review);
+           res.json(result);
+        })
+
+        app.get('/getAllReview', async (req,res)=>{
+            const query = {};
+            const result = await reviewCollection.find(query).toArray();
             res.json(result);
         })
 
