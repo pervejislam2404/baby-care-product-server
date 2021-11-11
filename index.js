@@ -19,19 +19,22 @@ async function run() {
         const usersCollection = database.collection("users");
         const orderCollection = database.collection("ordered");
         const reviewCollection = database.collection("review");
-
+ 
+        // fetching-all-data-from-server
         app.get('/products',async (req,res)=>{
             const query = {};
             const result = await  productCollection.find(query).limit(6).toArray();
             res.json(result);
         })
 
+        // inserting-every-logged-user-to-database
         app.post('/users', async (req,res)=>{
             const user = req.body;
             const result = await usersCollection.insertOne(user);
             res.send(result)
         })
 
+        // inserting-every-logged-user-to-database-with-update
         app.put('/users', async (req,res)=>{
             const user = req.body;
             const upsert= {upsert: true};
@@ -42,7 +45,8 @@ async function run() {
             const result = await usersCollection.updateOne(filter,updateDocs,upsert);
             res.send(result)
         })
-
+          
+        // checking-the-admin-validity
         app.get('/checkAdmin/:email', async (req,res)=>{
             const email = req.params.email;
            const query = {email: email};
@@ -55,6 +59,7 @@ async function run() {
         })
        
 
+        // make-admin-with-email
         app.put('/makeAdmin/:email', async (req,res)=>{
             const email = req.params.email;
             const query = {email: email};
@@ -63,6 +68,7 @@ async function run() {
             res.send(result)
         })
 
+        // get-every-single-product-details
         app.get('/singleProduct/:id', async (req,res)=>{
             const id = req.params.id
             const query = {_id: ObjectID(id)};
@@ -70,12 +76,14 @@ async function run() {
             res.json(result);
         })
 
+        // save-every-ordered-product-by-user
         app.post('/saveOrder', async (req,res)=>{
             const product = req.body;
             const result = await orderCollection.insertOne(product);
             res.json(result)
         })
 
+        // get-the-all-products-of-logged-user
         app.get('/userOrders/:email', async (req,res)=>{
             const email = req.params.email;
             const query = {email: email};
@@ -83,6 +91,7 @@ async function run() {
             res.json(result)
         })
 
+        // delete-an-order
         app.delete('/deleteOrder/:id', async (req,res)=>{
             const id = req.params.id;
             const query = {_id: ObjectID(id)};
@@ -90,12 +99,14 @@ async function run() {
             res.json(result);
         })
 
+        // get-all-users-order
         app.get('/getAllOrders', async (req,res)=>{
             const query = {};
             const result = await orderCollection.find(query).toArray();
             res.json(result);
         })
 
+        // get-all-main-products
         app.get('/getAllProducts', async (req,res)=>{
             const query = {};
             const result = await productCollection.find(query).toArray();
@@ -103,6 +114,7 @@ async function run() {
         })
 
 
+        // updating-the-product-status
         app.put('/setStatus/:id', async (req,res)=>{
             const id = req.params.id;
             const query = {_id: ObjectID(id)};
@@ -112,6 +124,7 @@ async function run() {
         })
 
 
+        // delete-the-main-product
         app.delete('/deleteProduct/:id', async (req,res)=>{
             const id = req.params.id;
             console.log(id)
@@ -121,24 +134,27 @@ async function run() {
         })
 
 
+        // add-a-product-to-main-product
         app.post('/addProduct', async (req,res)=>{
             const product = req.body;
             const result = await productCollection.insertOne(product);
             res.json(result);
         })
 
+        // save-user-review-to-database
         app.post('/saveReview', async (req,res)=>{
             const review = req.body;
            const result = await reviewCollection.insertOne(review);
            res.json(result);
         })
 
+        // get-all-users-review
         app.get('/getAllReview', async (req,res)=>{
             const query = {};
             const result = await reviewCollection.find(query).toArray();
             res.json(result);
         })
-// ddddddddddddddddddddddddddd
+
     } finally {
         // await client.close();
     }
