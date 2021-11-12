@@ -5,18 +5,19 @@ require('dotenv').config();
 const cors = require('cors');
 const ObjectID = require('mongodb').ObjectID;
 
-app.use(cors());
-app.use(express.json());
 const port = process.env.PORT || 5000;
 
-// baby-care-products-50b0d-firebase-adminsdk.json
 
-var serviceAccount = require("./baby-care-products-50b0d-firebase-adminsdk.json");
+
+const serviceAccount = require("./baby-care-products-50b0d-firebase-adminsdk.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
 // admin
+
+app.use(cors());
+app.use(express.json());
 
 
 const { MongoClient } = require('mongodb');
