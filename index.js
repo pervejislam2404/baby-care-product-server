@@ -7,14 +7,12 @@ const ObjectID = require('mongodb').ObjectID;
 
 const port = process.env.PORT || 5000;
 
-
-
 const serviceAccount = require("./baby-care-products-50b0d-firebase-adminsdk.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
-// admin
+
 
 app.use(cors());
 app.use(express.json());
@@ -24,12 +22,11 @@ const { MongoClient } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.qvyqk.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
-// token-check
+
 
 async function verifyToken(req,res,next){
 if(req?.headers?.authorization.startsWith('Bearer ')){
-    const token = req.headers?.authorization.split(' ')[1]
-   
+    const token = req.headers?.authorization.split(' ')[1];   
     try{
        const decodedUser = await admin.auth().verifyIdToken(token);
        req.decodedEmail= decodedUser.email;
@@ -37,9 +34,7 @@ if(req?.headers?.authorization.startsWith('Bearer ')){
     catch{
 
     }
-}
-
-
+    }
     next()
 }
 
