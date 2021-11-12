@@ -135,7 +135,7 @@ async function run() {
         })
 
         // get-all-users-order-and-verify-with-jwt-token
-        app.get('/getAllOrders', async (req,res)=>{
+        app.get('/getAllOrders',verifyToken, async (req,res)=>{
             if(req?.decodedEmail){
             const query = {};
             const result = await orderCollection.find(query).toArray();
@@ -154,7 +154,7 @@ async function run() {
 
 
         // updating-the-product-status-and-verify-user-with-jwt
-        app.put('/setStatus/:id', async (req,res)=>{
+        app.put('/setStatus/:id',verifyToken, async (req,res)=>{
             if(req?.decodedEmail){
                 const id = req.params.id;
                 const query = {_id: ObjectID(id)};
@@ -168,7 +168,7 @@ async function run() {
 
 
         // delete-the-main-product-and-verify-user-with-jwt
-        app.delete('/deleteProduct/:id', async (req,res)=>{
+        app.delete('/deleteProduct/:id',verifyToken, async (req,res)=>{
             if(req?.decodedEmail){
                 const id = req.params.id;
                 console.log(id)
@@ -182,7 +182,7 @@ async function run() {
 
 
         // add-a-product-to-main-product-and-verify-user-with-jwt
-        app.post('/addProduct', async (req,res)=>{
+        app.post('/addProduct',verifyToken, async (req,res)=>{
             if(req?.decodedEmail){
                 const product = req.body;
                 const result = await productCollection.insertOne(product);
@@ -193,7 +193,7 @@ async function run() {
         })
 
         // save-user-review-to-database-and-verify-user-with-jwt
-        app.post('/saveReview', async (req,res)=>{
+        app.post('/saveReview',verifyToken, async (req,res)=>{
             if(req?.decodedEmail){
             const review = req.body;
             const result = await reviewCollection.insertOne(review);
@@ -204,13 +204,13 @@ async function run() {
         })
 
         // get-all-users-review-and-verify-user-with-jwt
-        app.get('/getAllReview', async (req,res)=>{
+        app.get('/getAllReview',verifyToken, async (req,res)=>{
             if(req?.decodedEmail){
                 const query = {};
                 const result = await reviewCollection.find(query).toArray();
                 res.json(result);
             }else{
-                res.json({})
+                res.json([])
             }
         })
 
