@@ -203,15 +203,11 @@ async function run() {
             }
         })
 
-        // get-all-users-review-and-verify-user-with-jwt
-        app.get('/getAllReview',verifyToken, async (req,res)=>{
-            if(req?.decodedEmail){
+        // get-all-users-review
+        app.get('/getAllReview', async (req,res)=>{
                 const query = {};
                 const result = await reviewCollection.find(query).toArray();
                 res.json(result);
-            }else{
-                res.json([])
-            }
         })
 
 
