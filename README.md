@@ -4,8 +4,8 @@
 
 # Available Features
 
-- This si a baby care product's website.
-- Here will get the essential products for baby.
+- This is a baby care product's server side.
+- Here available all kind of baby products.
 - You can buy any kind of baby care products from here.
 - You can handle your products.
 - Order your preferences.  
