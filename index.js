@@ -135,10 +135,14 @@ async function run() {
         })
 
         // get-all-users-order-and-verify-with-jwt-token
-        app.get('/getAllOrders', async (req,res)=>{
+        app.get('/getAllOrders',verifyToken, async (req,res)=>{
             const query = {};
-            const result = await orderCollection.find(query).toArray();
-            res.json(result);
+            if(req?.decodedEmail){
+                const result = await orderCollection.find(query).toArray();
+                res.json(result);
+            }else{
+                res.json([])
+            }
         })
 
         // get-all-main-products
